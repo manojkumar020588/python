@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Observations</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Patient Observations</h1>
+        <a href="/" class="btn back-btn">Back to Home</a>
+        
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Value</th>
+                    <th>Unit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in observations %}
+                    {% set obs = entry.resource %}
+                    <tr>
+                        <td>{{ obs.effectiveDateTime }}</td>
+                        <td>
+                            {% if obs.code.text %}
+                                {{ obs.code.text }}
+                            {% else %}
+                                {{ obs.code.coding[0].display }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if obs.valueQuantity %}
+                                {{ obs.valueQuantity.value }}
+                            {% elif obs.valueCodeableConcept %}
+                                {{ obs.valueCodeableConcept.text }}
+                            {% elif obs.valueString %}
+                                {{ obs.valueString }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if obs.valueQuantity %}
+                                {{ obs.valueQuantity.unit }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
